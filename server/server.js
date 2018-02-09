@@ -1,8 +1,12 @@
+import falcor from 'falcor';
+import falcorExpress from 'falcor-express';
 import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import falcorRouter from 'falcor-router';
+import routes from './routes.js';
 
 mongoose.connect('mongodb://localhost/local');
 
@@ -22,6 +26,32 @@ app.use(cors());
 //with falcor-browser
 app.use(bodyParser.json({extended: false}));
 
+
+
+let cache = {
+	articles: [
+	{
+		id: 987654,
+		articleTitle: 'Lorem ipsum - article one',
+		articleContent: 'Here goes the content of the article'
+	},
+	{
+		id: 123456,
+		articleTitle: 'Lorem ipsum - article two from backend',
+		articleContent: 'Sky is the limit, the content goes here.'
+	}
+	]
+};
+var model = new falcor.Model({
+	cache: cache
+});
+app.use('/model.json', falcorExpress.dataSourceRoute((req, res) => {
+return new falcorRouter(routes);
+}));
+
+
+
+
 app.use(express.static('dist'));
 
 app.get('/', (req, res) => {
@@ -32,7 +62,7 @@ app.get('/', (req, res) => {
 		}).join('<br/>');
 		
 		res.send(`<h1>Publishing App Initial Application!</h1>
-		${ourArticles}`);
+			${ourArticles}`);
 	});
 });
 
