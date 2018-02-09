@@ -4,18 +4,10 @@ import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import falcorRouter from 'falcor-router';
 import routes from './routes.js';
 
-mongoose.connect('mongodb://localhost/local');
 
-const articleSchema = {
-	articleTitle:String,
-	articleContent:String
-};
-
-const Article = mongoose.model('Article', articleSchema, 'articles');
 const app = express();
 app.server = http.createServer(app);
 
